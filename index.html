@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BK Barachois — Commande v4</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap');
+:root{
+  --bk-orange:#FF6600;--bk-red:#C8102E;
+  --bg:#0D0D0D;--bg2:#161616;--bg3:#1F1F1F;--bg4:#252525;
+  --border:#2A2A2A;--text:#F0EDE8;--muted:#777;
+  --green:#22C55E;--blue:#3B82F6;--yellow:#FACC15;--purple:#A855F7;--teal:#14B8A6;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+/* HEADER */
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:200;gap:8px;flex-wrap:wrap;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-icon{width:34px;height:34px;background:var(--bk-orange);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue';font-size:18px;color:#fff;}
+.logo-text{font-family:'Bebas Neue';font-size:18px;letter-spacing:2px;}
+.logo-sub{font-size:10px;color:var(--muted);letter-spacing:1px;}
+.header-right{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.hbadge{background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:3px 9px;font-size:10px;color:var(--muted);font-family:'JetBrains Mono';}
+.hbadge span{font-weight:700;}
+.hbadge.o span{color:var(--bk-orange);}
+.hbadge.g{border-color:rgba(34,197,94,.3);}.hbadge.g span{color:var(--green);}
+.hbadge.b{border-color:rgba(59,130,246,.3);}.hbadge.b span{color:var(--blue);}
+.hbadge.p{border-color:rgba(168,85,247,.3);}.hbadge.p span{color:var(--purple);}
+/* TABS */
+.tabs{display:flex;gap:3px;padding:1rem 1.5rem 0;border-bottom:1px solid var(--border);background:var(--bg2);overflow-x:auto;}
+.tab{padding:8px 14px;border-radius:7px 7px 0 0;font-size:11px;font-weight:500;cursor:pointer;border:1px solid transparent;border-bottom:none;color:var(--muted);background:transparent;transition:all .2s;white-space:nowrap;display:flex;align-items:center;gap:5px;}
+.tab.active{background:var(--bg);border-color:var(--border);color:var(--text);}
+.tab-num{background:var(--bg3);border-radius:3px;padding:1px 5px;font-size:10px;font-family:'JetBrains Mono';color:var(--bk-orange);}
+main{padding:1.5rem;max-width:1500px;margin:0 auto;}
+.panel{display:none;}.panel.active{display:block;}
+/* LIVRAISON */
+.liv-banner{background:linear-gradient(135deg,rgba(34,197,94,.06),rgba(59,130,246,.06));border:1px solid rgba(34,197,94,.2);border-radius:10px;padding:1rem 1.5rem;margin-bottom:1.2rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.8rem;}
+.liv-label{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
+.liv-val{font-family:'Bebas Neue';font-size:18px;letter-spacing:1px;}
+.liv-val.o{color:var(--bk-orange);}.liv-val.g{color:var(--green);}.liv-val.b{color:var(--blue);}
+.liv-sub{font-size:10px;color:var(--muted);}
+/* PARAMS */
+.params-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.8rem;margin-bottom:1.2rem;}
+.param-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.1rem;}
+.param-label{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+.param-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:9px 12px;color:var(--text);font-size:16px;font-family:'JetBrains Mono';font-weight:700;outline:none;transition:border-color .2s;}
+.param-input:focus{border-color:var(--bk-orange);}
+.param-hint{font-size:10px;color:var(--muted);margin-top:5px;}
+.coeff-row{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap;}
+.coeff-btn{flex:1;min-width:65px;padding:5px;border-radius:5px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-size:10px;cursor:pointer;transition:all .2s;}
+.coeff-btn.active,.coeff-btn:hover{border-color:var(--bk-orange);color:var(--bk-orange);background:rgba(255,102,0,.1);}
+/* CA MODULE */
+.ca-card{grid-column:1/-1;}
+.ca-mode-toggle{display:flex;border:1px solid var(--border);border-radius:7px;overflow:hidden;width:fit-content;margin-bottom:.8rem;}
+.ca-mode-btn{padding:6px 14px;font-size:11px;font-weight:600;cursor:pointer;border:none;background:var(--bg3);color:var(--muted);transition:all .2s;}
+.ca-mode-btn.active{background:var(--bk-orange);color:#fff;}
+.ca-simple-row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;}
+.ca-simple-row .field{display:flex;flex-direction:column;gap:4px;}
+.ca-simple-row .field label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+.ca-sep{font-size:22px;color:var(--muted);padding-bottom:6px;}
+.ca-days-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:7px;margin-top:.3rem;}
+.ca-day-box{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:7px 9px;}
+.ca-day-name{font-size:11px;font-weight:600;margin-bottom:2px;}
+.ca-day-date{font-size:9px;color:var(--muted);margin-bottom:5px;}
+.ca-day-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:5px 7px;color:var(--bk-orange);font-size:13px;font-family:'JetBrains Mono';font-weight:700;outline:none;text-align:right;transition:border-color .2s;}
+.ca-day-input:focus{border-color:var(--bk-orange);}
+.ca-day-input.yw{color:var(--yellow);border-color:rgba(250,204,21,.25);}
+.ca-day-input.yw:focus{border-color:var(--yellow);}
+.ca-total-box{display:flex;align-items:center;justify-content:space-between;background:rgba(255,102,0,.08);border:1px solid rgba(255,102,0,.25);border-radius:7px;padding:8px 14px;margin-top:.8rem;}
+.ca-total-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+.ca-total-val{font-family:'Bebas Neue';font-size:24px;color:var(--bk-orange);}
+/* FORMULA */
+.formula-box{background:rgba(255,102,0,.04);border:1px solid rgba(255,102,0,.2);border-radius:10px;padding:1rem;margin-bottom:1.2rem;}
+.formula-mono{font-family:'JetBrains Mono';font-size:11px;color:var(--muted);line-height:1.9;}
+.formula-mono em{color:var(--bk-orange);font-style:normal;}
+.formula-ex{font-size:12px;color:var(--text);line-height:1.8;margin-top:7px;}
+/* INVENTAIRE */
+.inv-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem;flex-wrap:wrap;gap:10px;}
+.progress-bar{height:2px;background:var(--border);border-radius:2px;margin-bottom:1rem;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--bk-orange),var(--bk-red));transition:width .4s;}
+.section-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem;}
+.snav-btn{padding:4px 12px;border-radius:15px;font-size:11px;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--muted);transition:all .15s;}
+.snav-btn:hover{border-color:var(--bk-orange);color:var(--bk-orange);}
+.cat-header2{display:flex;align-items:center;gap:10px;margin-bottom:.7rem;margin-top:1.8rem;}
+.cat-icon2{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.cat-title2{font-family:'Bebas Neue';font-size:20px;letter-spacing:2px;}
+.cat-count{font-size:11px;color:var(--muted);}
+.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:8px;margin-bottom:.5rem;}
+.product-card{background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:11px 13px;transition:border-color .2s;}
+.product-card:hover{border-color:#333;}
+.product-card.acard{border-color:rgba(255,102,0,.2);}
+.product-card.okcard{border-color:rgba(34,197,94,.25);}
+.product-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:9px;gap:6px;}
+.product-name{font-size:12px;font-weight:500;line-height:1.3;flex:1;}
+.product-code{font-family:'JetBrains Mono';font-size:9px;color:var(--muted);}
+.product-meta{display:flex;gap:4px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;}
+.product-conso{font-family:'JetBrains Mono';font-size:9px;color:var(--muted);background:var(--bg3);border-radius:3px;padding:2px 5px;}
+.product-prix{font-family:'JetBrains Mono';font-size:9px;color:var(--yellow);background:rgba(250,204,21,.07);border-radius:3px;padding:2px 5px;}
+.product-inputs{display:grid;grid-template-columns:1fr 1fr 1fr 65px;gap:5px;}
+.input-group{display:flex;flex-direction:column;gap:2px;}
+.input-sublabel{font-size:8px;color:var(--muted);text-transform:uppercase;text-align:center;}
+.inv-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:5px 3px;color:var(--text);font-size:13px;font-family:'JetBrains Mono';font-weight:700;outline:none;text-align:center;transition:border-color .2s;}
+.inv-input:focus{border-color:var(--bk-orange);}
+.inv-input.tri{border-color:rgba(59,130,246,.3);color:var(--blue);}
+.inv-input.tri:focus{border-color:var(--blue);}
+.sug-pill{border-radius:5px;padding:5px 3px;font-family:'JetBrains Mono';font-size:13px;font-weight:700;text-align:center;min-height:30px;display:flex;align-items:center;justify-content:center;}
+.sug-pill.sn{background:rgba(255,102,0,.12);border:1px solid rgba(255,102,0,.3);color:var(--bk-orange);}
+.sug-pill.sz{background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.25);color:var(--green);}
+.sug-pill.st{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.25);color:var(--blue);}
+.sug-pill.su{background:rgba(200,16,46,.1);border:1px solid rgba(200,16,46,.3);color:var(--bk-red);}
+.sug-pill.na{background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-size:10px;font-weight:400;}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:.8rem;font-size:11px;color:var(--muted);}
+.legend-item{display:flex;align-items:center;gap:5px;}
+.ldot{width:8px;height:8px;border-radius:50%;}
+/* TOGGLE */
+.toggle-wrap{display:flex;align-items:center;gap:5px;}
+.toggle{width:30px;height:16px;background:var(--border);border-radius:8px;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;}
+.toggle.on{background:var(--bk-orange);}
+.toggle::after{content:'';position:absolute;width:12px;height:12px;background:#fff;border-radius:50%;top:2px;left:2px;transition:left .2s;}
+.toggle.on::after{left:16px;}
+/* COMMANDE */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:1rem;}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:12px;}
+.stat-val{font-family:'Bebas Neue';font-size:26px;color:var(--bk-orange);line-height:1;}
+.stat-label{font-size:10px;color:var(--muted);margin-top:3px;}
+.commande-table{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.cmd-head{display:grid;grid-template-columns:90px 1fr 60px 60px 70px 75px 65px;gap:8px;padding:9px 14px;background:var(--bg3);font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);}
+.cmd-row{display:grid;grid-template-columns:90px 1fr 60px 60px 70px 75px 65px;gap:8px;padding:8px 14px;border-bottom:1px solid var(--border);align-items:center;font-size:11px;transition:background .1s;}
+.cmd-row:hover{background:var(--bg3);}
+.cmd-row:last-child{border-bottom:none;}
+.cat-sep{padding:6px 14px;background:rgba(255,102,0,.05);font-family:'Bebas Neue';font-size:12px;letter-spacing:2px;color:var(--bk-orange);border-bottom:1px solid var(--border);}
+.comp-table{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:1rem;}
+.comp-head{display:grid;grid-template-columns:90px 1fr 55px 55px 70px 75px 75px;gap:8px;padding:9px 14px;background:var(--bg3);font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);}
+.comp-row{display:grid;grid-template-columns:90px 1fr 55px 55px 70px 75px 75px;gap:8px;padding:8px 14px;border-bottom:1px solid var(--border);align-items:center;font-size:11px;}
+.comp-row:hover{background:var(--bg3);}
+.comp-row:last-child{border-bottom:none;}
+.filter-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:.8rem;}
+.filter-btn{padding:4px 12px;border-radius:15px;font-size:11px;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--muted);transition:all .15s;}
+.filter-btn.active{border-color:var(--bk-orange);color:var(--bk-orange);background:rgba(255,102,0,.1);}
+.export-section{margin-top:1rem;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.1rem;}
+.export-title{font-family:'Bebas Neue';font-size:16px;letter-spacing:2px;margin-bottom:8px;}
+.export-buttons{display:flex;gap:8px;flex-wrap:wrap;}
+/* GESTION */
+.catalog-toolbar{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;align-items:center;}
+.search-box{flex:1;min-width:200px;background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:8px 12px;color:var(--text);font-size:13px;outline:none;transition:border-color .2s;}
+.search-box:focus{border-color:var(--bk-orange);}
+.cf-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1rem;}
+.cf-btn{padding:4px 12px;border-radius:15px;font-size:11px;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--muted);transition:all .15s;}
+.cf-btn.active{border-color:var(--bk-orange);color:var(--bk-orange);background:rgba(255,102,0,.1);}
+.catalog-table{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.ctbl-head{display:grid;grid-template-columns:90px 1fr 65px 60px 60px 80px 60px;gap:8px;padding:9px 14px;background:var(--bg3);font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);}
+.ctbl-row{display:grid;grid-template-columns:90px 1fr 65px 60px 60px 80px 60px;gap:8px;padding:8px 14px;border-bottom:1px solid var(--border);align-items:center;font-size:11px;transition:background .1s;}
+.ctbl-row:hover{background:var(--bg3);}
+.ctbl-row:last-child{border-bottom:none;}
+.ctbl-row.dim{opacity:.35;}
+.conso-sm{width:65px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:4px 5px;color:var(--bk-orange);font-size:11px;font-family:'JetBrains Mono';font-weight:700;outline:none;text-align:center;transition:border-color .2s;}
+.conso-sm:focus{border-color:var(--bk-orange);}
+/* ── PRÉVISIONNEL MENSUEL ─────────────────────────── */
+.prev-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:10px;}
+.month-selector{display:flex;align-items:center;gap:10px;}
+.month-nav{width:32px;height:32px;border-radius:7px;border:1px solid var(--border);background:var(--bg3);color:var(--text);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.month-nav:hover{border-color:var(--bk-orange);color:var(--bk-orange);}
+.month-display{font-family:'Bebas Neue';font-size:22px;letter-spacing:2px;color:var(--bk-orange);min-width:200px;text-align:center;}
+/* STATS MOIS */
+.prev-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:1.2rem;}
+.prev-stat{background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:12px;}
+.prev-stat-val{font-family:'Bebas Neue';font-size:24px;line-height:1;}
+.prev-stat-label{font-size:10px;color:var(--muted);margin-top:3px;}
+/* CALENDRIER */
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:1.2rem;}
+.cal-day-header{text-align:center;font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;padding:6px 0;font-weight:600;}
+.cal-day-header.we{color:var(--yellow);}
+.cal-day-header.liv{color:var(--green);}
+.cal-cell{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 6px;min-height:100px;display:flex;flex-direction:column;gap:4px;transition:border-color .2s;}
+.cal-cell:hover{border-color:#3A3A3A;}
+.cal-cell.empty{background:transparent;border-color:transparent;}
+.cal-cell.today-cell{border-color:rgba(255,102,0,.4);}
+.cal-cell.liv-cell{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.03);}
+.cal-cell.we-cell{background:rgba(250,204,21,.03);}
+.cal-day-num{font-family:'JetBrains Mono';font-size:11px;font-weight:700;color:var(--muted);}
+.cal-cell.today-cell .cal-day-num{color:var(--bk-orange);}
+.cal-cell.liv-cell .cal-day-num{color:var(--green);}
+.cal-liv-badge{font-size:8px;color:var(--green);background:rgba(34,197,94,.1);border-radius:3px;padding:1px 4px;font-weight:600;letter-spacing:.5px;align-self:flex-start;}
+.cal-input-wrap{display:flex;flex-direction:column;gap:3px;margin-top:2px;}
+.cal-input-label{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;}
+.cal-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:3px 5px;font-size:11px;font-family:'JetBrains Mono';font-weight:700;outline:none;text-align:right;transition:border-color .2s;}
+.cal-input.prev-inp{color:var(--bk-orange);}
+.cal-input.prev-inp:focus{border-color:var(--bk-orange);}
+.cal-input.reel-inp{color:var(--green);}
+.cal-input.reel-inp:focus{border-color:var(--green);}
+.cal-ecart{font-size:9px;font-family:'JetBrains Mono';font-weight:700;text-align:right;padding:1px 2px;}
+.cal-ecart.pos{color:var(--green);}
+.cal-ecart.neg{color:var(--bk-red);}
+.cal-ecart.zero{color:var(--muted);}
+/* TABLEAU COMMANDES */
+.cmd-period-table{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:1.2rem;}
+.cpt-head{display:grid;grid-template-columns:80px 100px 100px 80px 130px 130px 100px;gap:8px;padding:10px 14px;background:var(--bg3);font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);}
+.cpt-row{display:grid;grid-template-columns:80px 100px 100px 80px 130px 130px 100px;gap:8px;padding:9px 14px;border-bottom:1px solid var(--border);align-items:center;font-size:11px;transition:background .1s;}
+.cpt-row:hover{background:var(--bg3);}
+.cpt-row:last-child{border-bottom:none;}
+.realisation-bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-top:3px;}
+.realisation-fill{height:100%;border-radius:3px;transition:width .5s;}
+/* BILAN MENSUEL */
+.bilan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:1.2rem;}
+.bilan-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.1rem;}
+.bilan-card-title{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.bilan-val{font-family:'Bebas Neue';font-size:30px;line-height:1;}
+.bilan-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+/* BUTTONS */
+.btn{padding:8px 16px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .2s;display:flex;align-items:center;gap:6px;}
+.btn-primary{background:var(--bk-orange);color:#fff;}.btn-primary:hover{background:#E55A00;}
+.btn-secondary{background:var(--bg3);color:var(--text);border:1px solid var(--border);}.btn-secondary:hover{border-color:var(--bk-orange);}
+.btn-success{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3);}
+.btn-danger{background:rgba(200,16,46,.1);color:var(--bk-red);border:1px solid rgba(200,16,46,.25);}
+.btn-teal{background:rgba(20,184,166,.15);color:var(--teal);border:1px solid rgba(20,184,166,.3);}
+.empty-state{text-align:center;padding:2.5rem 2rem;color:var(--muted);}
+.empty-icon{font-size:40px;margin-bottom:.6rem;}
+.empty-title{font-family:'Bebas Neue';font-size:20px;letter-spacing:2px;color:var(--text);}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:none;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;width:min(480px,95vw);max-height:80vh;overflow-y:auto;}
+.modal-title{font-family:'Bebas Neue';font-size:20px;letter-spacing:2px;margin-bottom:1rem;}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem;}
+.mfield{display:flex;flex-direction:column;gap:4px;}
+.mfield label{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.mfield input,.mfield select{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-size:13px;font-family:'JetBrains Mono';outline:none;width:100%;}
+.mfield input:focus,.mfield select:focus{border-color:var(--bk-orange);}
+.mfield.full{grid-column:1/-1;}
+.mbtns{display:flex;gap:8px;justify-content:flex-end;}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--bg3);border:1px solid var(--green);border-radius:9px;padding:10px 16px;font-size:12px;color:var(--green);z-index:999;transform:translateY(100px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:8px;}
+.toast.show{transform:translateY(0);opacity:1;}
+@media(max-width:900px){
+  .calendar-grid{grid-template-columns:repeat(7,1fr);}
+  .cal-cell{min-height:80px;}
+  .cpt-head,.cpt-row{grid-template-columns:70px 90px 90px 60px;}
+  .cpt-head span:nth-child(n+5),.cpt-row div:nth-child(n+5){display:none;}
+}
+@media(max-width:600px){
+  .product-grid{grid-template-columns:1fr;}
+  .product-inputs{grid-template-columns:1fr 1fr;}
+  .calendar-grid{grid-template-columns:repeat(4,1fr);}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">BK</div>
+    <div><div class="logo-text">Commande Distrifood</div><div class="logo-sub">K1444 · BARACHOIS · v4</div></div>
+  </div>
+  <div class="header-right">
+    <div class="hbadge o">Aujourd'hui : <span id="badgeToday">—</span></div>
+    <div class="hbadge g">LIV : <span id="badgeNextLiv">—</span></div>
+    <div class="hbadge b">Couverture : <span id="badgeDelai">—</span>j</div>
+    <div class="hbadge o">CA : <span id="badgeCA">—</span></div>
+    <div class="hbadge p">Mois : <span id="badgeCAMois">—</span></div>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showPanel('params')">⚙️ Paramètres</div>
+  <div class="tab" onclick="showPanel('previsionnel')">📅 Prévisionnel <span class="tab-num" id="prevCount">—</span></div>
+  <div class="tab" onclick="showPanel('inventaire')">📦 Inventaire <span class="tab-num" id="invCount">0</span></div>
+  <div class="tab" onclick="showPanel('commande')">🛒 Commande <span class="tab-num" id="cmdCount">0</span></div>
+  <div class="tab" onclick="showPanel('gestion')">🗂 Articles <span class="tab-num" id="gestionCount">0</span></div>
+</div>
+
+<main>
+
+<!-- ===== PARAMS ===== -->
+<div class="panel active" id="panel-params">
+  <div class="liv-banner">
+    <div class="liv-item"><div class="liv-label">📅 Aujourd'hui</div><div class="liv-val o" id="livToday">—</div><div class="liv-sub" id="livTodayDay">—</div></div>
+    <div class="liv-item"><div class="liv-label">🚚 Prochaine LIV</div><div class="liv-val g" id="livNext">—</div><div class="liv-sub" id="livNextDay">—</div></div>
+    <div class="liv-item"><div class="liv-label">📦 Couvre jusqu'au</div><div class="liv-val b" id="livCover">—</div><div class="liv-sub" id="livCoverSub">—</div></div>
+    <div class="liv-item"><div class="liv-label">⏱ Jours à couvrir</div><div class="liv-val o" id="livDays">—</div><div class="liv-sub">auto LUN &amp; JEU</div></div>
+  </div>
+  <div class="params-grid">
+    <div class="param-card">
+      <div class="param-label">📅 Date de commande</div>
+      <input type="date" class="param-input" id="paramDate" style="font-size:14px;" oninput="onDateChange()">
+      <div class="param-hint">Délai calculé auto (LIV Lundi &amp; Jeudi)</div>
+    </div>
+    <div class="param-card ca-card">
+      <div class="param-label">💰 CA Prévisionnel commande</div>
+
+      <!-- SOURCE PRÉVISIONNEL -->
+      <div id="prevSourceBanner" style="display:none;background:rgba(20,184,166,.08);border:1px solid rgba(20,184,166,.3);border-radius:7px;padding:7px 12px;margin-bottom:.8rem;font-size:11px;color:var(--teal);display:flex;align-items:center;gap:8px;">
+        <span>📅</span>
+        <span id="prevSourceText">CA importé depuis le prévisionnel mensuel</span>
+        <button onclick="clearPrevSource()" style="margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;">✕</button>
+      </div>
+
+      <div class="ca-mode-toggle">
+        <button class="ca-mode-btn active" id="btnSimple" onclick="setCAMode('simple')">⚡ Journalier moyen</button>
+        <button class="ca-mode-btn" id="btnDetail" onclick="setCAMode('detail')">📅 Détail par jour</button>
+      </div>
+
+      <div id="modeSimple">
+        <div class="ca-simple-row">
+          <div class="field">
+            <label>CA JOURNALIER MOYEN (€)</label>
+            <input type="number" class="param-input" id="caJour" placeholder="ex: 11000" min="0" oninput="onCAJourManual()">
+          </div>
+          <div class="ca-sep">×</div>
+          <div class="field">
+            <label>JOURS COUVERTS</label>
+            <div id="joursAffiche" style="font-family:'Bebas Neue';font-size:28px;color:var(--blue);padding:7px 12px;background:var(--bg3);border-radius:7px;border:1px solid var(--border);">—</div>
+          </div>
+        </div>
+        <div class="param-hint" style="margin-top:6px;" id="caSimpleHint">Multiplié automatiquement par le nombre de jours</div>
+      </div>
+
+      <div id="modeDetail" style="display:none;margin-top:.3rem;">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:6px;">CA par jour couvert — tiré du prévisionnel si disponible, sinon saisie manuelle</div>
+        <div class="ca-days-grid" id="caDaysGrid"></div>
+      </div>
+
+      <div class="ca-total-box">
+        <div><div class="ca-total-label">CA TOTAL COMMANDE</div><div class="ca-total-val" id="caTotalVal">0 €</div></div>
+        <div style="text-align:right;">
+          <div style="font-size:9px;color:var(--muted);">→ SUG</div>
+          <div id="prevCoverageInfo" style="font-size:9px;color:var(--teal);margin-top:2px;display:none;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="param-card">
+      <div class="param-label">📈 Coefficient Saisonnalité</div>
+      <input type="number" class="param-input" id="paramCoeff" value="1.00" step="0.05" min="0.5" max="2" oninput="updateAll()">
+      <div class="coeff-row">
+        <button class="coeff-btn" onclick="setCoeff(0.80,this)">Creux −20%</button>
+        <button class="coeff-btn active" onclick="setCoeff(1.00,this)">Normal</button>
+        <button class="coeff-btn" onclick="setCoeff(1.20,this)">Vacances</button>
+        <button class="coeff-btn" onclick="setCoeff(1.35,this)">Férié +35%</button>
+      </div>
+    </div>
+    <div class="param-card">
+      <div class="param-label">🔒 Stock de sécurité (%)</div>
+      <input type="number" class="param-input" id="paramSecurite" value="15" min="0" max="50" oninput="updateAll()">
+      <div class="param-hint">Marge ajoutée à la SUG brute</div>
+    </div>
+  </div>
+  <div class="formula-box">
+    <div class="formula-mono">
+      SUG BRUTE = ( CA ÷ 1000 ) × <em>CONSO/1000</em> × <em>Jours auto</em> × <em>Coeff</em> × <em>(1 + Sécu%)</em><br>
+      SUG NETTE = SUG BRUTE − <em>Stock actuel</em> − <em>Transit</em>
+    </div>
+    <div id="formulaEx" class="formula-ex">Renseignez le CA pour voir un exemple.</div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <button class="btn btn-primary" onclick="showPanel('previsionnel')">📅 Prévisionnel →</button>
+    <button class="btn btn-secondary" onclick="showPanel('inventaire')">📦 Inventaire →</button>
+    <button class="btn btn-secondary" onclick="showPanel('gestion')">🗂 Articles →</button>
+  </div>
+</div>
+
+<!-- ===== PRÉVISIONNEL MENSUEL ===== -->
+<div class="panel" id="panel-previsionnel">
+  <div class="prev-toolbar">
+    <div class="month-selector">
+      <button class="month-nav" onclick="changeMonth(-1)">‹</button>
+      <div class="month-display" id="monthDisplay">—</div>
+      <button class="month-nav" onclick="changeMonth(1)">›</button>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-teal" onclick="importFromParams()">📥 Importer CA depuis paramètres</button>
+      <button class="btn btn-secondary" onclick="resetMois()">🔄 Reset mois</button>
+      <button class="btn btn-primary" onclick="showPanel('commande')">🛒 Commande →</button>
+    </div>
+  </div>
+
+  <!-- STATS RAPIDES -->
+  <div class="prev-stats" id="prevStats"></div>
+
+  <!-- LÉGENDE -->
+  <div class="legend" style="margin-bottom:.8rem;">
+    <div class="legend-item"><div class="ldot" style="background:var(--bk-orange)"></div>CA prévu (saisir)</div>
+    <div class="legend-item"><div class="ldot" style="background:var(--green)"></div>CA réel (saisir)</div>
+    <div class="legend-item"><div class="ldot" style="background:var(--green);opacity:.4"></div>Jour de livraison</div>
+    <div class="legend-item"><div class="ldot" style="background:var(--yellow)"></div>Vendredi / Samedi</div>
+  </div>
+
+  <!-- CALENDRIER -->
+  <div class="calendar-grid" id="calendarGrid"></div>
+
+  <!-- TABLEAU PAR COMMANDE -->
+  <div style="font-family:'Bebas Neue';font-size:20px;letter-spacing:2px;margin-bottom:.5rem;margin-top:.5rem;">🚚 Répartition par commande</div>
+  <div style="font-size:11px;color:var(--muted);margin-bottom:.8rem;">CA automatiquement réparti entre chaque livraison Lundi/Jeudi</div>
+  <div class="cmd-period-table">
+    <div class="cpt-head">
+      <span>N° CMD</span><span>DATE LIV</span><span>COUVRE → </span><span>JOURS</span><span>CA PRÉVU PÉRIODE</span><span>CA RÉEL PÉRIODE</span><span>RÉALISATION</span>
+    </div>
+    <div id="cmdPeriodRows"></div>
+  </div>
+
+  <!-- BILAN MENSUEL -->
+  <div style="font-family:'Bebas Neue';font-size:20px;letter-spacing:2px;margin-bottom:.8rem;">📊 Bilan mensuel — Prévu vs Réel</div>
+  <div class="bilan-grid" id="bilanGrid"></div>
+</div>
+
+<!-- ===== INVENTAIRE ===== -->
+<div class="panel" id="panel-inventaire">
+  <div class="inv-toolbar">
+    <div>
+      <div style="font-family:'Bebas Neue';font-size:24px;letter-spacing:2px;">Saisie Inventaire</div>
+      <div style="font-size:12px;color:var(--muted);">Articles actifs · SUG nette en temps réel</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-secondary" onclick="resetInventaire()">🔄 Reset</button>
+      <button class="btn btn-primary" onclick="showPanel('commande')">🛒 Commande →</button>
+    </div>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="ldot" style="background:var(--bk-orange)"></div>À commander</div>
+    <div class="legend-item"><div class="ldot" style="background:var(--green)"></div>Stock OK</div>
+    <div class="legend-item"><div class="ldot" style="background:var(--blue)"></div>Transit couvre</div>
+    <div class="legend-item"><div class="ldot" style="background:var(--bk-red)"></div>Urgent</div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="section-nav" id="sectionNav"></div>
+  <div id="inventaireContent"></div>
+</div>
+
+<!-- ===== COMMANDE ===== -->
+<div class="panel" id="panel-commande">
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val" id="statArticles">0</div><div class="stat-label">À commander</div></div>
+    <div class="stat-card"><div class="stat-val" id="statCA" style="font-size:16px;">—</div><div class="stat-label">CA prévu</div></div>
+    <div class="stat-card"><div class="stat-val" id="statDelai">—</div><div class="stat-label">Jours couverts</div></div>
+    <div class="stat-card"><div class="stat-val" id="statCoeff">—</div><div class="stat-label">Coeff</div></div>
+    <div class="stat-card"><div class="stat-val" id="statTransit" style="color:var(--blue)">0</div><div class="stat-label">Avec transit</div></div>
+  </div>
+  <div class="filter-row" id="filterRow"></div>
+  <div id="commandeContent"><div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">Aucune commande</div></div></div>
+  <div id="comparatifSection" style="display:none;">
+    <div style="font-family:'Bebas Neue';font-size:18px;letter-spacing:2px;margin:1.2rem 0 .4rem;">📊 Impact du transit</div>
+    <div class="comp-table">
+      <div class="comp-head"><span>CODE</span><span>LIBELLÉ</span><span>STOCK (ctn)</span><span>TRANSIT (ctn)</span><span>BRUTE (ctn)</span><span>NETTE (ctn)</span><span>GAIN (ctn)</span></div>
+      <div id="comparatifRows"></div>
+    </div>
+  </div>
+  <div class="export-section">
+    <div class="export-title">📤 Exporter</div>
+    <div class="export-buttons">
+      <button class="btn btn-primary" onclick="exportCSV()">📄 CSV</button>
+      <button class="btn btn-secondary" onclick="exportCopier()">📋 Copier</button>
+      <button class="btn btn-secondary" onclick="window.print()">🖨 Imprimer</button>
+      <button class="btn btn-danger" onclick="clearCommande()">🗑 Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GESTION ===== -->
+<div class="panel" id="panel-gestion">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:10px;">
+    <div>
+      <div style="font-family:'Bebas Neue';font-size:24px;letter-spacing:2px;">Gestion Catalogue</div>
+      <div style="font-size:12px;color:var(--muted);">Activer / désactiver · Modifier CONSO/1000 · Ajouter</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-success" onclick="openModal()">➕ Ajouter</button>
+      <button class="btn btn-secondary" onclick="enableAll()">✅ Tout activer</button>
+      <button class="btn btn-secondary" onclick="disableAll()">⬜ Tout désactiver</button>
+    </div>
+  </div>
+  <div class="catalog-toolbar">
+    <input type="text" class="search-box" id="searchBox" placeholder="🔍 Code ou libellé..." oninput="renderGestion()">
+    <button class="btn btn-secondary" onclick="document.getElementById('searchBox').value='';renderGestion()">✕</button>
+  </div>
+  <div class="cf-row" id="cfRow"></div>
+  <div id="gestionContent"></div>
+</div>
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-title">➕ Ajouter un article</div>
+    <div class="mgrid">
+      <div class="mfield full"><label>Code article</label><input type="text" id="mCode" placeholder="ex: 93204"></div>
+      <div class="mfield full"><label>Libellé</label><input type="text" id="mNom" placeholder="ex: PATTY BURGER"></div>
+      <div class="mfield"><label>PCB</label><input type="number" id="mPcb" placeholder="312" min="0"></div>
+      <div class="mfield"><label>CONSO/1000 €</label><input type="number" id="mConso" placeholder="35" step="0.01" min="0"></div>
+      <div class="mfield"><label>Prix (€)</label><input type="number" id="mPrix" placeholder="0.00" step="0.01" min="0"></div>
+      <div class="mfield"><label>Catégorie</label>
+        <select id="mCat">
+          <option value="Surgelés">🥩 Surgelés</option>
+          <option value="Frais">🧀 Frais</option>
+          <option value="Sec">🥤 Sec</option>
+          <option value="Papier">📦 Papier</option>
+          <option value="Economat">🧹 Économat</option>
+        </select>
+      </div>
+    </div>
+    <div class="mbtns">
+      <button class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-primary" onclick="addArticle()">➕ Ajouter</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast">✅ <span id="toastMsg"></span></div>
+
+<script>
+// ============================================================
+// CATALOGUE DISTRIFOOD 04/2026
+// CONSO/1000 calibrées depuis ADORIA Barachois — Avril 2026
+// ============================================================
+const CATALOGUE_BASE = [
+  {code:"93204",nom:"BEEF BURGER PATTY x312PC",pcb:312,prix:149.99,cat:"Surgelés",conso:36.91},
+  {code:"109818",nom:"BEEF WHOPPER PATTY 113G x132PC",pcb:132,prix:147.75,cat:"Surgelés",conso:33.24},
+  {code:"2719072",nom:"CHICKEN CRISPY x136PC",pcb:136,prix:93.26,cat:"Surgelés",conso:17.21},
+  {code:"2719117",nom:"CHICKEN CHICKENBURGER x200PC",pcb:200,prix:67.17,cat:"Surgelés",conso:15.39},
+  {code:"2719134",nom:"CHICKEN TEMPURA NUGGET 568PC",pcb:568,prix:72.79,cat:"Surgelés",conso:80.58},
+  {code:"2719149",nom:"CHICKEN PATTY PREMIUM x96PC",pcb:96,prix:126.25,cat:"Surgelés",conso:13.28},
+  {code:"2719161",nom:"CHICKEN KRISPER TENDERS x216",pcb:216,prix:109.45,cat:"Surgelés",conso:18.27},
+  {code:"303384",nom:"CHILI CHEESE NUGGETS 9x50PC",pcb:450,prix:64.51,cat:"Surgelés",conso:26.78},
+  {code:"306197",nom:"VEGGIE WHOPPER GEN5",pcb:100,prix:65.00,cat:"Surgelés",conso:1.37},
+  {code:"308181",nom:"BACON PEPITE CKD FRZN",pcb:6,prix:116.86,cat:"Surgelés",conso:0.3},
+  {code:"308211",nom:"BACON TRANCHE CKD FRZN",pcb:6,prix:132.40,cat:"Surgelés",conso:0.25},
+  {code:"001825",nom:"FRITES BK FRIES 9X9 5x2.5KG",pcb:12500,prix:27.30,cat:"Surgelés",conso:10.8},
+  {code:"92252",nom:"FRITE V3 CLAREBOUT",pcb:12500,prix:27.30,cat:"Surgelés",conso:8},
+  {code:"456357",nom:"ONION RINGS 798PCS",pcb:798,prix:37.46,cat:"Surgelés",conso:60.29},
+  {code:"92824",nom:"CHEDDAR RING V3",pcb:110,prix:94.80,cat:"Surgelés",conso:2.55},
+  {code:"91276",nom:"CANTAL TRANCHE 18G",pcb:520,prix:166.26,cat:"Surgelés",conso:4.62},
+  {code:"92482",nom:"PATTY EMMENTAL 80G",pcb:108,prix:80.78,cat:"Surgelés",conso:1.66},
+  {code:"60481",nom:"FROMAGE RACLETTE FUMEE 20G",pcb:400,prix:110.72,cat:"Surgelés",conso:3},
+  {code:"93554",nom:"BUN 4.5 SHINY BRIOCHE",pcb:30,prix:18.63,cat:"Surgelés",conso:11.51},
+  {code:"93555",nom:"BUN 4.5 SHINY CHEDDAR",pcb:30,prix:20.06,cat:"Surgelés",conso:11.51},
+  {code:"93551",nom:"BUN 4.5 / SURG",pcb:30,prix:12.73,cat:"Surgelés",conso:11.51},
+  {code:"93558",nom:"BUN 4 / SURG",pcb:40,prix:12.39,cat:"Surgelés",conso:40.59},
+  {code:"93559",nom:"BUN 5 / SURG",pcb:24,prix:11.84,cat:"Surgelés",conso:13.42},
+  {code:"93761",nom:"BUN MINI 40G / SURG",pcb:48,prix:17.14,cat:"Surgelés",conso:9.68},
+  {code:"93762",nom:"BUN MINI 40G 56P BABY BURGERS",pcb:56,prix:21.54,cat:"Surgelés",conso:9.68},
+  {code:"92450",nom:"TORTILLA 25CM",pcb:120,prix:35.00,cat:"Surgelés",conso:2.85},
+  {code:"60273",nom:"PATTY FISH 77G MSC V1",pcb:90,prix:64.26,cat:"Surgelés",conso:4.0},
+  {code:"60255",nom:"OIGNONS RISSOLES",pcb:6000,prix:34.92,cat:"Surgelés",conso:0.5},
+  {code:"91957",nom:"DONUT CHOCO NOISETTES",pcb:36,prix:28.74,cat:"Surgelés",conso:0.6},
+  {code:"93054",nom:"MUFFIN CHOCOLAT 80G",pcb:60,prix:54.73,cat:"Surgelés",conso:1.16},
+  {code:"93910",nom:"FROMAGE CHEDDAR FONDU 11G V2",pcb:1056,prix:97.52,cat:"Frais",conso:108.33},
+  {code:"93076",nom:"SAUCE CHEDDAR POCHE 2KG",pcb:16000,prix:96.54,cat:"Frais",conso:0.5},
+  {code:"93672",nom:"DOSETTE SAUCE FRITES 10ML",pcb:780,prix:40.26,cat:"Frais",conso:53.4},
+  {code:"92420",nom:"LAIT SUNDAE 10L",pcb:1000,prix:27.99,cat:"Frais",conso:1.62},
+  {code:"91110",nom:"SAUCE BEARNAISE",pcb:3000,prix:17.44,cat:"Frais",conso:0.09},
+  {code:"91112",nom:"SAUCE MOUTARDE A L'ANCIENNE",pcb:3000,prix:14.26,cat:"Frais",conso:0.09},
+  {code:"91650",nom:"POMPOT POMME 90G BIO x48PC",pcb:48,prix:21.06,cat:"Frais",conso:1.15},
+  {code:"52216",nom:"KETCHUP SACHETS 10GR",pcb:1500,prix:45.23,cat:"Frais",conso:38.33},
+  {code:"93830",nom:"DIP GOUT GRILLE 1954 V2",pcb:320,prix:49.79,cat:"Sec",conso:3.55},
+  {code:"93831",nom:"DIP SPICY ANDALOUSE V2",pcb:320,prix:52.52,cat:"Sec",conso:3.78},
+  {code:"93833",nom:"DIP CREAMY RANCH V3",pcb:320,prix:49.48,cat:"Sec",conso:5.63},
+  {code:"93834",nom:"DIP CHILI GOUT CHEESE V2",pcb:320,prix:47.22,cat:"Sec",conso:2.93},
+  {code:"93835",nom:"DIP BARBECUE V2",pcb:320,prix:39.90,cat:"Sec",conso:4.12},
+  {code:"91028",nom:"DIP MIEL MOUTARDE",pcb:320,prix:51.32,cat:"Sec",conso:5.31},
+  {code:"91030",nom:"DIP SAUCE SMOKY BACON",pcb:320,prix:53.08,cat:"Sec",conso:4.94},
+  {code:"1912",nom:"COCA COLA 20L BIB",pcb:2000,prix:122.52,cat:"Sec",conso:1.75},
+  {code:"1913",nom:"FANTA ORANGE 20L BIB",pcb:2000,prix:117.02,cat:"Sec",conso:0.5},
+  {code:"1914",nom:"SPRITE 20L BIB",pcb:2000,prix:122.52,cat:"Sec",conso:0.45},
+  {code:"1915",nom:"FANTA CITRON 20L BIB",pcb:2000,prix:117.02,cat:"Sec",conso:0.3},
+  {code:"ZERO",nom:"COCA COLA ZERO BIB 10L",pcb:1000,prix:69.12,cat:"Sec",conso:0.1},
+  {code:"5053246",nom:"LIPTON PECHE ZERO BIB 10L",pcb:100,prix:98.89,cat:"Sec",conso:0.8},
+  {code:"3019",nom:"MINUT MAID POMME 20CL",pcb:30,prix:17.56,cat:"Sec",conso:2.36},
+  {code:"GRAIN005",nom:"CAFE GRAINS PRONTO CREMA 1KG",pcb:1,prix:34.99,cat:"Sec",conso:0.01},
+  {code:"021660",nom:"KETCHUP VOLPACK 15L",pcb:15000,prix:27.01,cat:"Sec",conso:0.25},
+  {code:"60358",nom:"SAUCE KING / BIG KING V2",pcb:14000,prix:56.50,cat:"Sec",conso:0.09},
+  {code:"60359",nom:"SAUCE MAYONNAISE 14KG",pcb:14000,prix:52.10,cat:"Sec",conso:1},
+  {code:"072877",nom:"BBQ SAUCE BULK 8KG",pcb:8000,prix:19.56,cat:"Sec",conso:0.1},
+  {code:"51307",nom:"VPK MOUTARDE 14.5KG",pcb:14500,prix:32.48,cat:"Sec",conso:0.1},
+  {code:"51340",nom:"JALAPENOS 3200PC",pcb:3200,prix:48.40,cat:"Sec",conso:80},
+  {code:"52089",nom:"CORNICHON TRANCHE 2616P",pcb:2616,prix:32.00,cat:"Sec",conso:122.41},
+  {code:"408690",nom:"HUILE FRITURE 2x7.5L",pcb:15000,prix:42.54,cat:"Sec",conso:2.55},
+  {code:"51193",nom:"SEL FRITE",pcb:12000,prix:24.67,cat:"Sec",conso:0.5},
+  {code:"91390",nom:"SUCRE PORTION 3000P",pcb:3000,prix:39.77,cat:"Sec",conso:1},
+  {code:"72893",nom:"CHILI CHEESE SAUCE",pcb:8000,prix:28.10,cat:"Sec",conso:0.25},
+  {code:"93326",nom:"SACHET FRITE GRAND V3",pcb:6000,prix:67.89,cat:"Papier",conso:9.51},
+  {code:"93325",nom:"SACHET FRITE MOYEN V3",pcb:4000,prix:39.51,cat:"Papier",conso:47.48},
+  {code:"93324",nom:"SACHET FRITE PETIT V3",pcb:4000,prix:30.60,cat:"Papier",conso:23.08},
+  {code:"93447",nom:"SACHET X2P KRISPER TENDERS",pcb:2000,prix:58.78,cat:"Papier",conso:18.27},
+  {code:"94101",nom:"BOITE X5P KRISPER TENDERS",pcb:360,prix:60.47,cat:"Papier",conso:3.07},
+  {code:"94102",nom:"BOITE X10P KRISPER TENDERS",pcb:160,prix:40.26,cat:"Papier",conso:1.24},
+  {code:"94103",nom:"BOITE X3P BABY BURGERS V2",pcb:240,prix:67.30,cat:"Papier",conso:1.82},
+  {code:"91761",nom:"BOITE KING FRIES 640P V2",pcb:640,prix:64.50,cat:"Papier",conso:9.92},
+  {code:"93439",nom:"SACHET NUGGETS 4/6/9 V5",pcb:2000,prix:58.00,cat:"Papier",conso:27.26},
+  {code:"93330",nom:"SACHET SNACKS S/M/L V2",pcb:2000,prix:58.00,cat:"Papier",conso:27.26},
+  {code:"93337",nom:"WRAP WHOPPER V2",pcb:1000,prix:27.93,cat:"Papier",conso:15},
+  {code:"93339",nom:"WRAP XXL BIG KING / LOUISIANE V2",pcb:1000,prix:25.01,cat:"Papier",conso:15},
+  {code:"93341",nom:"WRAP GENERIQUE GRAND V2",pcb:1000,prix:28.74,cat:"Papier",conso:13},
+  {code:"93343",nom:"WRAP BIG KING / BIG FISH V3",pcb:1000,prix:18.10,cat:"Papier",conso:10},
+  {code:"93400",nom:"WRAP CHICKEN SPICY",pcb:1000,prix:24.65,cat:"Papier",conso:57.77},
+  {code:"93426",nom:"WRAP HAMB/CHEESE V4",pcb:1000,prix:16.95,cat:"Papier",conso:14},
+  {code:"93433",nom:"WRAP GENERIQUE PETIT V2",pcb:1000,prix:19.70,cat:"Papier",conso:14},
+  {code:"93389",nom:"GOB 25CL 1PE",pcb:2200,prix:122.40,cat:"Papier",conso:18.71},
+  {code:"93390",nom:"GOB 40CL 1PE",pcb:1260,prix:68.40,cat:"Papier",conso:30.23},
+  {code:"93391",nom:"GOB 50CL 1PE",pcb:1000,prix:80.85,cat:"Papier",conso:14.24},
+  {code:"93396",nom:"GOB SHAKE V4",pcb:2200,prix:112.80,cat:"Papier",conso:10},
+  {code:"60459",nom:"COUV 25CL / 40CL / 50CL",pcb:900,prix:65.96,cat:"Papier",conso:39.28},
+  {code:"925690",nom:"LID HOT 0.2",pcb:1000,prix:26.37,cat:"Papier",conso:14.5},
+  {code:"91762",nom:"PORTE GOB x2 CARTON BK",pcb:500,prix:47.43,cat:"Papier",conso:15.67},
+  {code:"92501",nom:"SAC VAE PETIT 4LB",pcb:1000,prix:25.73,cat:"Papier",conso:4.32},
+  {code:"92502",nom:"SAC VAE MOYEN 8LB",pcb:1000,prix:47.70,cat:"Papier",conso:10.26},
+  {code:"92503",nom:"SAC VAE 12LB GRAND",pcb:1000,prix:53.16,cat:"Papier",conso:18.09},
+  {code:"92509",nom:"SAC DELIVERY BK 2026",pcb:250,prix:34.33,cat:"Papier",conso:2.58},
+  {code:"KRAFTBK",nom:"SAC CABAS BK LOCAL x250PC",pcb:250,prix:52.75,cat:"Papier",conso:15.12},
+  {code:"590339",nom:"SERVIETTE 8000PC",pcb:8000,prix:60.40,cat:"Papier",conso:214.07},
+  {code:"SER051",nom:"SERVIETTE BLANCHE LOCAL 6000PC",pcb:6000,prix:45.30,cat:"Papier",conso:214.07},
+  {code:"120925",nom:"PAILLE PAPIER 6MM 5000PC",pcb:5000,prix:69.03,cat:"Papier",conso:53.4},
+  {code:"93800",nom:"FOURCHETTE BOIS 1000PC",pcb:1000,prix:21.50,cat:"Papier",conso:13.5},
+  {code:"92550",nom:"COUTEAU BOIS 2500PC",pcb:2500,prix:40.96,cat:"Papier",conso:13.5},
+  {code:"ZJET061",nom:"GANTS BLEU TPE L x2000PC",pcb:2000,prix:67.50,cat:"Economat",conso:2.16},
+  {code:"ZJET062",nom:"GANTS BLEU TPE XL x2000PC",pcb:2000,prix:67.50,cat:"Economat",conso:4.32},
+  {code:"JET029",nom:"GANT LATEX T-M BTE 100",pcb:100,prix:15.60,cat:"Economat",conso:0},
+  {code:"92007",nom:"FILM ALIMENTAIRE 30CM 4PC",pcb:4,prix:42.00,cat:"Economat",conso:0},
+  {code:"91448",nom:"LAVETTE PAD BLEUE 400P",pcb:400,prix:72.90,cat:"Economat",conso:1.48},
+  {code:"91449",nom:"LAVETTE PAD ROUGE 400P",pcb:400,prix:72.90,cat:"Economat",conso:0},
+  {code:"91450",nom:"LAVETTE PAD VERTE 400P",pcb:400,prix:72.90,cat:"Economat",conso:0},
+  {code:"93726",nom:"CHARLOTTE CLIP NOIRE 1000P",pcb:1000,prix:26.50,cat:"Economat",conso:0},
+  {code:"93727",nom:"CACHE BARBE NOIR x1000PC",pcb:1000,prix:52.97,cat:"Economat",conso:0},
+  {code:"TAB20",nom:"TABLIER JETABLE 20x50PC",pcb:1000,prix:75.00,cat:"Economat",conso:0},
+  {code:"93723",nom:"SAC POUBELLE 120L NOIR",pcb:200,prix:25.34,cat:"Economat",conso:3.24},
+  {code:"93724",nom:"SAC POUBELLE 120L TRANSPARENT",pcb:200,prix:25.21,cat:"Economat",conso:3.24},
+  {code:"93600",nom:"FILTRE FRYMASTER x100",pcb:100,prix:134.00,cat:"Economat",conso:0},
+  {code:"AR04065",nom:"FILTRE FRYMASTER PREMIUM x100",pcb:100,prix:290.00,cat:"Economat",conso:0},
+  {code:"SHA5",nom:"SOLUTION HYDRO ALCOOLIQUE 5L",pcb:1,prix:59.19,cat:"Economat",conso:0},
+  {code:"92061D",nom:"KAY NETTOYANT PLONGE 2x5L",pcb:2,prix:47.88,cat:"Economat",conso:0},
+  {code:"92062D",nom:"KAY SANITIZER 2x5L",pcb:2,prix:120.55,cat:"Economat",conso:0},
+  {code:"69107",nom:"RACLETTE SOL BLEUE x2",pcb:2,prix:70.00,cat:"Economat",conso:0},
+  {code:"93011",nom:"ROULEAU DE CAISSE BKRE",pcb:30,prix:53.51,cat:"Economat",conso:0},
+  {code:"60477",nom:"CRAYON GRAS NOIR",pcb:12,prix:11.52,cat:"Economat",conso:0},
+];
+
+const CATS=['Surgelés','Frais','Sec','Papier','Economat'];
+const CAT_ICONS={Surgelés:'🥩',Frais:'🧀',Sec:'🥤',Papier:'📦',Economat:'🧹'};
+const CAT_COLORS={Surgelés:'#3B82F6',Frais:'#22C55E',Sec:'#F59E0B',Papier:'#EC4899',Economat:'#6B7280'};
+const JOURS=['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+const JOURS_COURT=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+const MOIS_FR=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+
+// ── ÉTAT GLOBAL ─────────────────────────────────────────
+let catalogue=[], inventory={}, transit={}, manualQte={};
+let caMode='simple', caDayValues={}, caTotal=0;
+let gestionCatFilter='Tout';
+// Prévisionnel : { 'YYYY-MM': { 'YYYY-MM-DD': {prev:0, reel:0} } }
+let prevData={};
+let currentMonth=new Date(); currentMonth.setDate(1);
+
+// ── CATALOGUE ────────────────────────────────────────────
+function initCatalogue(){
+  try{
+    const s=localStorage.getItem('bk_cat_v4');
+    if(s){
+      const arr=JSON.parse(s); const map={};
+      arr.forEach(a=>{map[a.code]=a;});
+      catalogue=CATALOGUE_BASE.map(b=>map[b.code]?{...b,actif:map[b.code].actif,conso:map[b.code].conso}:{...b,actif:true});
+      arr.filter(a=>a.custom).forEach(a=>{if(!catalogue.find(x=>x.code===a.code))catalogue.push({...a});});
+    }else catalogue=CATALOGUE_BASE.map(a=>({...a,actif:true}));
+  }catch(e){catalogue=CATALOGUE_BASE.map(a=>({...a,actif:true}));}
+  saveCatalogue();
+}
+function saveCatalogue(){
+  try{localStorage.setItem('bk_cat_v4',JSON.stringify(catalogue));}catch(e){}
+  document.getElementById('badgeActifs')&&(document.getElementById('badgeActifs').textContent=catalogue.filter(a=>a.actif).length);
+  document.getElementById('gestionCount').textContent=catalogue.length;
+}
+function activeArticles(){return catalogue.filter(a=>a.actif);}
+
+// ── PRÉVISIONNEL ─────────────────────────────────────────
+function prevKey(year,month){return `${year}-${String(month+1).padStart(2,'0')}`;}
+function dateKey(d){return d.toISOString().split('T')[0];}
+function loadPrev(){try{const s=localStorage.getItem('bk_prev_v4');if(s)prevData=JSON.parse(s);}catch(e){}}
+function savePrev(){try{localStorage.setItem('bk_prev_v4',JSON.stringify(prevData));}catch(e){}}
+
+function getPrevForDate(d){
+  const mk=prevKey(d.getFullYear(),d.getMonth());
+  const dk=dateKey(d);
+  return prevData[mk]?.(dk)||{prev:0,reel:0};
+}
+function setPrevForDate(d,field,val){
+  const mk=prevKey(d.getFullYear(),d.getMonth());
+  const dk=dateKey(d);
+  if(!prevData[mk])prevData[mk]={};
+  if(!prevData[mk][dk])prevData[mk][dk]={prev:0,reel:0};
+  prevData[mk][dk][field]=parseFloat(val)||0;
+  savePrev();
+  updatePrevStats();
+  updateCmdPeriods();
+  updateBilan();
+  // Si on modifie le CA prévu → re-synchro automatique vers les paramètres
+  if(field==='prev'){
+    syncCAFromPrevisionnel();
+    computeCA();
+  }
+}
+
+function getDaysInMonth(year,month){
+  const days=[];
+  const d=new Date(year,month,1);
+  while(d.getMonth()===month){days.push(new Date(d));d.setDate(d.getDate()+1);}
+  return days;
+}
+function isLivraison(d){const dow=d.getDay();return dow===1||dow===4;} // Lun=1, Jeu=4
+function isWeekend(d){const dow=d.getDay();return dow===5||dow===6;}
+function isToday(d){const t=new Date();return d.toDateString()===t.toDateString();}
+
+function buildCalendar(){
+  const y=currentMonth.getFullYear(), m=currentMonth.getMonth();
+  const days=getDaysInMonth(y,m);
+  const mk=prevKey(y,m);
+
+  // Header mois
+  document.getElementById('monthDisplay').textContent=`${MOIS_FR[m]} ${y}`;
+
+  const grid=document.getElementById('calendarGrid');
+  grid.innerHTML='';
+
+  // En-têtes jours
+  ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'].forEach((j,i)=>{
+    const h=document.createElement('div');
+    h.className='cal-day-header'+(i>=4?' we':'')+(i===0||i===3?' liv':'');
+    h.textContent=j+(i===0?' 🚚':i===3?' 🚚':'');
+    grid.appendChild(h);
+  });
+
+  // Offset : 1er jour de la semaine (Lun=0)
+  const firstDow=(days[0].getDay()+6)%7; // Lun=0
+  for(let i=0;i<firstDow;i++){
+    const e=document.createElement('div');e.className='cal-cell empty';grid.appendChild(e);
+  }
+
+  days.forEach(d=>{
+    const dk=dateKey(d);
+    const data=(prevData[mk]&&prevData[mk][dk])||{prev:0,reel:0};
+    const isLiv=isLivraison(d), isWE=isWeekend(d), isTod=isToday(d);
+    const dow=d.getDay(); // 0=Dim,1=Lun,...
+
+    const cell=document.createElement('div');
+    let cls='cal-cell';
+    if(isLiv)cls+=' liv-cell';
+    else if(isWE)cls+=' we-cell';
+    if(isTod)cls+=' today-cell';
+    cell.className=cls;
+
+    const ecart=data.reel-data.prev;
+    const ecartHtml=data.prev>0||data.reel>0
+      ?`<div class="cal-ecart ${ecart>0?'pos':ecart<0?'neg':'zero'}">${ecart>=0?'+':''}${fmt(ecart)} €</div>`:'';
+
+    cell.innerHTML=`
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span class="cal-day-num">${d.getDate()}</span>
+        ${isLiv?'<span class="cal-liv-badge">🚚 LIV</span>':''}
+      </div>
+      <div class="cal-input-wrap">
+        <div class="cal-input-label" style="color:var(--bk-orange)">Prévu</div>
+        <input type="number" class="cal-input prev-inp" value="${data.prev||''}" placeholder="0" min="0"
+          data-date="${dk}" data-field="prev"
+          oninput="setPrevForDate(new Date('${dk}'),'prev',this.value);this.parentNode.nextElementSibling&&updateEcart(this)">
+        <div class="cal-input-label" style="color:var(--green)">Réel</div>
+        <input type="number" class="cal-input reel-inp" value="${data.reel||''}" placeholder="0" min="0"
+          data-date="${dk}" data-field="reel"
+          oninput="setPrevForDate(new Date('${dk}'),'reel',this.value);updateEcartCell(this)">
+        ${ecartHtml}
+      </div>`;
+    grid.appendChild(cell);
+  });
+
+  updatePrevStats();
+  updateCmdPeriods();
+  updateBilan();
+  updateBadgeCAMois();
+}
+
+function updateEcartCell(input){
+  const cell=input.closest('.cal-cell');
+  const inputs=cell.querySelectorAll('.cal-input');
+  const prev=parseFloat(inputs[0].value)||0;
+  const reel=parseFloat(inputs[1].value)||0;
+  const ecart=reel-prev;
+  let ecartDiv=cell.querySelector('.cal-ecart');
+  if(!ecartDiv){
+    ecartDiv=document.createElement('div');
+    input.parentNode.appendChild(ecartDiv);
+  }
+  ecartDiv.className='cal-ecart '+(ecart>0?'pos':ecart<0?'neg':'zero');
+  ecartDiv.textContent=(ecart>=0?'+':'')+fmt(ecart)+' €';
+}
+
+function getMoisData(){
+  const y=currentMonth.getFullYear(),m=currentMonth.getMonth();
+  const mk=prevKey(y,m);
+  const days=getDaysInMonth(y,m);
+  let totPrev=0,totReel=0,nbPrev=0,nbReel=0;
+  days.forEach(d=>{
+    const dk=dateKey(d);
+    const data=(prevData[mk]&&prevData[mk][dk])||{prev:0,reel:0};
+    if(data.prev>0){totPrev+=data.prev;nbPrev++;}
+    if(data.reel>0){totReel+=data.reel;nbReel++;}
+  });
+  return{totPrev,totReel,nbPrev,nbReel,ecart:totReel-totPrev};
+}
+
+function updatePrevStats(){
+  const{totPrev,totReel,nbPrev,nbReel,ecart}=getMoisData();
+  const pct=totPrev>0?Math.round((totReel/totPrev)*100):0;
+  const stats=[
+    {label:'CA Prévu Mois',val:fmt(totPrev)+' €',color:'var(--bk-orange)'},
+    {label:'CA Réel Mois',val:fmt(totReel)+' €',color:'var(--green)'},
+    {label:'Écart',val:(ecart>=0?'+':'')+fmt(ecart)+' €',color:ecart>=0?'var(--green)':'var(--bk-red)'},
+    {label:'Réalisation',val:totPrev>0?pct+'%':'—',color:pct>=100?'var(--green)':pct>=90?'var(--yellow)':'var(--bk-red)'},
+    {label:'Moy. CA/Jour Prévu',val:nbPrev>0?fmt(Math.round(totPrev/nbPrev))+' €':'—',color:'var(--muted)'},
+    {label:'Moy. CA/Jour Réel',val:nbReel>0?fmt(Math.round(totReel/nbReel))+' €':'—',color:'var(--muted)'},
+  ];
+  document.getElementById('prevStats').innerHTML=stats.map(s=>
+    `<div class="prev-stat"><div class="prev-stat-val" style="color:${s.color}">${s.val}</div><div class="prev-stat-label">${s.label}</div></div>`
+  ).join('');
+  document.getElementById('prevCount').textContent=nbPrev>0?fmt(totPrev)+'€':'0';
+}
+
+function updateCmdPeriods(){
+  const y=currentMonth.getFullYear(),m=currentMonth.getMonth();
+  const mk=prevKey(y,m);
+  const days=getDaysInMonth(y,m);
+  // Trouver toutes les LIV du mois
+  const livDays=days.filter(d=>isLivraison(d));
+  const rows=document.getElementById('cmdPeriodRows');
+  if(!livDays.length){rows.innerHTML='<div style="padding:1rem;color:var(--muted);text-align:center;font-size:12px;">Aucune livraison ce mois</div>';return;}
+
+  rows.innerHTML=livDays.map((liv,i)=>{
+    const nextLiv=livDays[i+1];
+    const coverUntil=nextLiv?new Date(nextLiv.getTime()-86400000):new Date(y,m+1,0); // fin du mois si dernière LIV
+    // Somme CA prévu et réel entre liv et coverUntil
+    let totP=0,totR=0;
+    let cur=new Date(liv);
+    while(cur<=coverUntil){
+      const dk=dateKey(cur);
+      const data=(prevData[mk]&&prevData[mk][dk])||{prev:0,reel:0};
+      totP+=data.prev; totR+=data.reel;
+      cur.setDate(cur.getDate()+1);
+    }
+    const nbJ=Math.round((coverUntil-liv)/86400000)+1;
+    const pct=totP>0?Math.round((totR/totP)*100):0;
+    const pctColor=pct>=100?'var(--green)':pct>=90?'var(--yellow)':'var(--bk-red)';
+    const barW=Math.min(100,pct);
+    return `<div class="cpt-row">
+      <div style="font-family:'JetBrains Mono';font-size:10px;color:var(--muted)">CMD ${String(i+1).padStart(2,'0')}</div>
+      <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--blue)">${fmtDate(liv)} <span style="color:var(--muted);font-size:9px;">${JOURS_COURT[liv.getDay()]}</span></div>
+      <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--bk-red)">${fmtDate(coverUntil)}</div>
+      <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--muted)">${nbJ}j</div>
+      <div style="font-family:'JetBrains Mono';font-size:12px;font-weight:700;color:var(--bk-orange)">${totP>0?fmt(totP)+' €':'—'}</div>
+      <div style="font-family:'JetBrains Mono';font-size:12px;font-weight:700;color:var(--green)">${totR>0?fmt(totR)+' €':'—'}</div>
+      <div>
+        <div style="font-family:'JetBrains Mono';font-size:12px;font-weight:700;color:${pctColor}">${totP>0?pct+'%':'—'}</div>
+        <div class="realisation-bar"><div class="realisation-fill" style="width:${barW}%;background:${pctColor}"></div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateBilan(){
+  const{totPrev,totReel,nbPrev,nbReel,ecart}=getMoisData();
+  const pct=totPrev>0?(totReel/totPrev*100).toFixed(1):0;
+  const bilanItems=[
+    {title:'CA Prévisionnel Total',val:fmt(totPrev)+' €',sub:nbPrev+' jours saisis',color:'var(--bk-orange)',bg:'rgba(255,102,0,.06)'},
+    {title:'CA Réel Total',val:fmt(totReel)+' €',sub:nbReel+' jours saisis',color:'var(--green)',bg:'rgba(34,197,94,.06)'},
+    {title:'Écart Prévu vs Réel',val:(ecart>=0?'+':'')+fmt(ecart)+' €',sub:ecart>=0?'En avance':'En retard',color:ecart>=0?'var(--green)':'var(--bk-red)',bg:ecart>=0?'rgba(34,197,94,.06)':'rgba(200,16,46,.06)'},
+    {title:'Taux de Réalisation',val:totPrev>0?pct+'%':'—',sub:'Objectif : 100%',color:parseFloat(pct)>=100?'var(--green)':parseFloat(pct)>=90?'var(--yellow)':'var(--bk-red)',bg:'rgba(59,130,246,.06)'},
+    {title:'Moy. CA/Jour Prévu',val:nbPrev>0?fmt(Math.round(totPrev/nbPrev))+' €':'—',sub:'sur '+nbPrev+' jours',color:'var(--muted)',bg:'transparent'},
+    {title:'Moy. CA/Jour Réel',val:nbReel>0?fmt(Math.round(totReel/nbReel))+' €':'—',sub:'sur '+nbReel+' jours',color:'var(--muted)',bg:'transparent'},
+  ];
+  document.getElementById('bilanGrid').innerHTML=bilanItems.map(b=>
+    `<div class="bilan-card" style="background:${b.bg}">
+      <div class="bilan-card-title">${b.title}</div>
+      <div class="bilan-val" style="color:${b.color}">${b.val}</div>
+      <div class="bilan-sub">${b.sub}</div>
+    </div>`
+  ).join('');
+}
+
+function updateBadgeCAMois(){
+  const{totPrev}=getMoisData();
+  document.getElementById('badgeCAMois').textContent=totPrev>0?fmt(totPrev)+' €':'—';
+}
+
+function changeMonth(delta){
+  currentMonth.setMonth(currentMonth.getMonth()+delta);
+  buildCalendar();
+}
+
+function importFromParams(){
+  // Importer le CA journalier moyen dans les jours couverts par la commande actuelle
+  const ds=document.getElementById('paramDate').value;
+  if(!ds){toast('Sélectionnez une date de commande d\'abord');return;}
+  const{nextLiv,coverUntil}=calcDelaiAuto(ds);
+  if(!nextLiv||!coverUntil){toast('Impossible de calculer la période');return;}
+  const jour=parseFloat(document.getElementById('caJour').value)||0;
+  if(jour===0){toast('Saisissez un CA journalier dans les paramètres');return;}
+  let cur=new Date(nextLiv);
+  let count=0;
+  while(cur<=coverUntil){
+    const mk=prevKey(cur.getFullYear(),cur.getMonth());
+    const dk=dateKey(cur);
+    if(!prevData[mk])prevData[mk]={};
+    if(!prevData[mk][dk])prevData[mk][dk]={prev:0,reel:0};
+    prevData[mk][dk].prev=jour;
+    count++;
+    cur.setDate(cur.getDate()+1);
+  }
+  savePrev();
+  buildCalendar();
+  syncCAFromPrevisionnel();
+  computeCA();
+  toast(`CA ${fmt(jour)} €/jour importé sur ${count} jours`);
+}
+
+function resetMois(){
+  if(!confirm('Effacer toutes les données du mois affiché ?'))return;
+  const mk=prevKey(currentMonth.getFullYear(),currentMonth.getMonth());
+  delete prevData[mk];
+  savePrev();
+  buildCalendar();
+  toast('Mois réinitialisé');
+}
+
+// ── LIVRAISONS ───────────────────────────────────────────
+function getNextDeliveries(fromDate,count){
+  const DL=[1,4];const results=[];let d=new Date(fromDate);
+  for(let i=1;i<=21&&results.length<count;i++){
+    const next=new Date(d);next.setDate(d.getDate()+i);
+    if(DL.includes(next.getDay()))results.push(new Date(next));
+  }
+  return results;
+}
+function calcDelaiAuto(ds){
+  if(!ds)return{delai:3,nextLiv:null,coverUntil:null};
+  const today=new Date(ds+'T00:00:00');
+  const livs=getNextDeliveries(today,3);
+  const nextLiv=livs[0],coverLiv=livs[1];
+  if(!nextLiv||!coverLiv)return{delai:3,nextLiv,coverUntil:null};
+  const coverUntil=new Date(coverLiv);coverUntil.setDate(coverLiv.getDate()-1);
+  const delai=Math.round((coverUntil-today)/86400000);
+  return{delai:Math.max(1,delai),nextLiv,coverUntil};
+}
+function fmtDate(d){return d?d.toLocaleDateString('fr-FR',{day:'2-digit',month:'short'}):'—';}
+function fmt(n){return Math.round(n).toLocaleString('fr-FR');}
+function getDelai(){const ds=document.getElementById('paramDate').value;return ds?calcDelaiAuto(ds).delai:3;}
+
+// ── CA MODULE ────────────────────────────────────────────
+// ── SOURCE PRÉVISIONNEL ──────────────────────────────────
+// Récupère le CA prévu depuis prevData pour un jour donné
+function getPrevCAForDay(d){
+  const mk=prevKey(d.getFullYear(),d.getMonth());
+  const dk=dateKey(d);
+  return prevData[mk]?.[dk]?.prev||0;
+}
+
+// Vérifie si des données prévisionnel existent pour la période couverte
+function getPrevDataForPeriod(ds){
+  if(!ds) return {days:[], hasPrev:false, total:0, moyenne:0, coverage:0};
+  const days=getCoveredDays(ds);
+  if(!days.length) return {days:[], hasPrev:false, total:0, moyenne:0, coverage:0};
+  let total=0, nbAvecPrev=0;
+  days.forEach(d=>{
+    const ca=getPrevCAForDay(d);
+    if(ca>0){total+=ca;nbAvecPrev++;}
+  });
+  return {
+    days,
+    hasPrev: nbAvecPrev>0,
+    total,
+    moyenne: nbAvecPrev>0?Math.round(total/nbAvecPrev):0,
+    coverage: Math.round((nbAvecPrev/days.length)*100),
+    nbAvecPrev,
+    nbTotal: days.length
+  };
+}
+
+// Synchronise automatiquement le CA depuis le prévisionnel dès qu'on a les données
+function syncCAFromPrevisionnel(){
+  const ds=document.getElementById('paramDate').value;
+  const info=getPrevDataForPeriod(ds);
+  if(!info.hasPrev) return false;
+
+  // Mise à jour du banner info
+  const banner=document.getElementById('prevSourceBanner');
+  const infoEl=document.getElementById('prevCoverageInfo');
+  banner.style.display='flex';
+  document.getElementById('prevSourceText').textContent=
+    `CA depuis prévisionnel — ${info.nbAvecPrev}/${info.nbTotal} jours renseignés (${info.coverage}%)`;
+  infoEl.style.display='block';
+  infoEl.textContent=`📅 ${info.nbAvecPrev} jour${info.nbAvecPrev>1?'s':''} depuis prévisionnel`;
+
+  if(caMode==='simple'){
+    // Mode simple : mettre la moyenne des jours prévisionnels
+    document.getElementById('caJour').value=info.moyenne;
+    document.getElementById('caSimpleHint').innerHTML=
+      `<span style="color:var(--teal)">📅 Moyenne calculée depuis le prévisionnel mensuel (${info.nbAvecPrev} jours)</span>`;
+  } else {
+    // Mode détail : remplir chaque jour depuis le prévisionnel
+    info.days.forEach(d=>{
+      const ca=getPrevCAForDay(d);
+      if(ca>0) caDayValues[dateKey(d)]=ca;
+    });
+    buildCaDaysGrid();
+  }
+  return true;
+}
+
+function clearPrevSource(){
+  document.getElementById('prevSourceBanner').style.display='none';
+  document.getElementById('prevCoverageInfo').style.display='none';
+  document.getElementById('caSimpleHint').textContent='Multiplié automatiquement par le nombre de jours';
+  // Vider les valeurs prévisionnel du module CA sans toucher au prévisionnel mensuel
+  if(caMode==='simple'){
+    document.getElementById('caJour').value='';
+  } else {
+    caDayValues={};
+    buildCaDaysGrid();
+  }
+  computeCA();
+}
+
+function onCAJourManual(){
+  // L'utilisateur modifie manuellement → on ne remplace plus automatiquement
+  document.getElementById('prevSourceBanner').style.display='none';
+  document.getElementById('caSimpleHint').textContent='Multiplié automatiquement par le nombre de jours';
+  computeCA();
+}
+
+function setCAMode(mode){
+  caMode=mode;
+  document.getElementById('btnSimple').classList.toggle('active',mode==='simple');
+  document.getElementById('btnDetail').classList.toggle('active',mode==='detail');
+  document.getElementById('modeSimple').style.display=mode==='simple'?'':'none';
+  document.getElementById('modeDetail').style.display=mode==='detail'?'':'none';
+  if(mode==='detail') buildCaDaysGrid();
+  syncCAFromPrevisionnel();
+  computeCA();
+}
+
+function getCoveredDays(ds){
+  if(!ds)return[];const{coverUntil}=calcDelaiAuto(ds);if(!coverUntil)return[];
+  const today=new Date(ds+'T00:00:00');const days=[];
+  let d=new Date(today);d.setDate(d.getDate()+1);
+  while(d<=coverUntil){days.push(new Date(d));d.setDate(d.getDate()+1);}
+  return days;
+}
+
+function buildCaDaysGrid(){
+  const ds=document.getElementById('paramDate').value;
+  const days=getCoveredDays(ds);
+  const grid=document.getElementById('caDaysGrid');
+  if(!days.length){
+    grid.innerHTML='<div style="color:var(--muted);font-size:12px;">Sélectionnez une date d\'abord</div>';
+    return;
+  }
+  grid.innerHTML=days.map(d=>{
+    const key=dateKey(d);
+    const dow=d.getDay();
+    const isWE=dow===5||dow===6||dow===0;
+    const isLiv=isLivraison(d);
+    // Priorité : valeur déjà dans caDayValues > prévisionnel > vide
+    const valManuelle=caDayValues[key];
+    const valPrev=getPrevCAForDay(d);
+    const val=valManuelle!==undefined?valManuelle:(valPrev>0?valPrev:'');
+    const fromPrev=valManuelle===undefined&&valPrev>0;
+    return `<div class="ca-day-box" style="${fromPrev?'border-color:rgba(20,184,166,.3);':''}">
+      <div class="ca-day-name" style="${isWE?'color:var(--yellow)':isLiv?'color:var(--green)':''}">
+        ${JOURS[dow]}${isLiv?' 🚚':''}
+      </div>
+      <div class="ca-day-date" style="display:flex;align-items:center;gap:4px;">
+        ${fmtDate(d)}
+        ${fromPrev?'<span style="font-size:7px;color:var(--teal);background:rgba(20,184,166,.1);border-radius:2px;padding:1px 3px;">PREV</span>':''}
+      </div>
+      <input type="number" class="${isWE?'ca-day-input yw':'ca-day-input'}"
+        value="${val}" placeholder="0" min="0"
+        style="${fromPrev?'border-color:rgba(20,184,166,.3);color:var(--teal);':''}"
+        oninput="caDayValues['${key}']=parseFloat(this.value)||0;computeCA()">
+    </div>`;
+  }).join('');
+}
+
+function computeCA(){
+  if(caMode==='simple'){
+    const jour=parseFloat(document.getElementById('caJour').value)||0;
+    caTotal=jour*getDelai();
+  }else{
+    // Mode détail : somme des valeurs saisies ou prévisionnel
+    const ds=document.getElementById('paramDate').value;
+    const days=getCoveredDays(ds);
+    caTotal=days.reduce((s,d)=>{
+      const key=dateKey(d);
+      const val=caDayValues[key]!==undefined?caDayValues[key]:getPrevCAForDay(d);
+      return s+val;
+    },0);
+  }
+  document.getElementById('caTotalVal').textContent=caTotal>0?fmt(caTotal)+' €':'0 €';
+  document.getElementById('badgeCA').textContent=caTotal>0?fmt(caTotal)+' €':'—';
+  updateAll();
+}
+
+// ── SUG ──────────────────────────────────────────────────
+function calcSUGBrute(art){
+  const delai=getDelai(),coeff=parseFloat(document.getElementById('paramCoeff').value)||1;
+  const secu=parseFloat(document.getElementById('paramSecurite').value)||0;
+  if(caTotal===0||art.conso===0)return null;
+  return(caTotal/1000)*art.conso*delai*coeff*(1+secu/100);
+}
+function calcSUGNette(art){
+  const brute=calcSUGBrute(art);if(brute===null)return null;
+  // Retourne les unités brutes (conversion cartons faite à l'affichage)
+  return Math.max(0,brute-(inventory[art.code]||0)-(transit[art.code]||0));
+}
+function uniteToCarton(unites,pcb){ return pcb>0?Math.ceil(unites/pcb):Math.ceil(unites); }
+function calcSUGNetteCartons(art){ const n=calcSUGNette(art); return n===null?null:uniteToCarton(n,art.pcb); }
+function stockEnCartons(code,pcb){ return pcb>0?Math.floor((inventory[code]||0)/pcb):(inventory[code]||0); }
+function transitEnCartons(code,pcb){ return pcb>0?Math.floor((transit[code]||0)/pcb):(transit[code]||0); }
+function updateAll(){
+  updateFormulaEx();
+  activeArticles().forEach(art=>{
+    if(art.cat==='Economat')return;
+    const el=document.getElementById('sug_'+art.code);if(el)renderSUG(el,art);
+  });
+  updateProgress();updateCommandeCount();
+}
+function renderSUG(el,art){
+  const brute=calcSUGBrute(art),nette=calcSUGNette(art),tr=transit[art.code]||0;
+  el.className='sug-pill';
+  if(brute===null){el.textContent='—';el.classList.add('na');return;}
+  const cartons=uniteToCarton(nette,art.pcb);
+  if(nette<=0&&tr>0){el.textContent='✓ Transit';el.classList.add('st');}
+  else if(nette<=0){el.textContent='✓ OK';el.classList.add('sz');}
+  else if(cartons>=5){el.textContent=cartons+' ctn';el.classList.add('su');}
+  else{el.textContent=cartons+' ctn';el.classList.add('sn');}
+}
+function updateFormulaEx(){
+  const delai=getDelai(),coeff=parseFloat(document.getElementById('paramCoeff').value)||1;
+  const secu=parseFloat(document.getElementById('paramSecurite').value)||0;
+  if(caTotal===0){document.getElementById('formulaEx').textContent='Renseignez le CA pour voir un exemple.';return;}
+  const ex=catalogue.find(a=>a.conso>0)||catalogue[0];if(!ex)return;
+  const brute=(caTotal/1000)*ex.conso*delai*coeff*(1+secu/100);
+  const stock=inventory[ex.code]||0,tr=transit[ex.code]||0;
+  const nette=Math.max(0,Math.ceil(brute-stock-tr));
+  document.getElementById('formulaEx').innerHTML=
+    `Exemple — <strong>${ex.nom}</strong> (CONSO/1000 = ${ex.conso}) :<br>
+    SUG brute = (${fmt(caTotal)} ÷ 1000) × ${ex.conso} × ${delai}j × ${coeff} × ${(1+secu/100).toFixed(2)} = <strong>${Math.ceil(brute)} u.</strong><br>
+    SUG nette = ${Math.ceil(brute)} − stock(${stock}) − transit(${tr}) = ${Math.ceil(nette)} u. → <strong style="color:var(--bk-orange)">${uniteToCarton(nette,ex.pcb)} carton(s)</strong>`;
+}
+
+// ── DATE / LIVRAISONS UI ─────────────────────────────────
+function onDateChange(){
+  const ds=document.getElementById('paramDate').value;
+  const{delai,nextLiv,coverUntil}=calcDelaiAuto(ds);
+  if(ds){
+    const t=new Date(ds+'T00:00:00');
+    document.getElementById('livToday').textContent=fmtDate(t);
+    document.getElementById('livTodayDay').textContent=JOURS[t.getDay()];
+    document.getElementById('badgeToday').textContent=fmtDate(t)+' '+JOURS[t.getDay()];
+  }
+  document.getElementById('livNext').textContent=nextLiv?fmtDate(nextLiv):'—';
+  document.getElementById('livNextDay').textContent=nextLiv?JOURS[nextLiv.getDay()]:'—';
+  document.getElementById('livCover').textContent=coverUntil?fmtDate(coverUntil):'—';
+  document.getElementById('livCoverSub').textContent=coverUntil?'('+JOURS[coverUntil.getDay()]+')':'—';
+  document.getElementById('livDays').textContent=delai;
+  document.getElementById('joursAffiche').textContent=delai;
+  document.getElementById('badgeNextLiv').textContent=nextLiv?fmtDate(nextLiv)+' '+JOURS[nextLiv.getDay()]:'—';
+  document.getElementById('badgeDelai').textContent=delai;
+  if(caMode==='detail')buildCaDaysGrid();
+  // Synchro auto depuis le prévisionnel mensuel
+  syncCAFromPrevisionnel();
+  computeCA();
+}
+
+// ── INVENTAIRE ───────────────────────────────────────────
+function buildInventaire(){
+  const nav=document.getElementById('sectionNav'),content=document.getElementById('inventaireContent');
+  nav.innerHTML='';content.innerHTML='';
+  const acts=activeArticles();
+  CATS.forEach(cat=>{
+    const prods=acts.filter(a=>a.cat===cat);if(!prods.length)return;
+    const nb=document.createElement('button');nb.className='snav-btn';
+    nb.textContent=CAT_ICONS[cat]+' '+cat+' ('+prods.length+')';
+    nb.onclick=()=>document.getElementById('cat_'+cat).scrollIntoView({behavior:'smooth',block:'start'});
+    nav.appendChild(nb);
+    const section=document.createElement('div');section.id='cat_'+cat;
+    section.innerHTML=`<div class="cat-header2">
+      <div class="cat-icon2" style="background:${CAT_COLORS[cat]}22;color:${CAT_COLORS[cat]};">${CAT_ICONS[cat]}</div>
+      <div><div class="cat-title2" style="color:${CAT_COLORS[cat]}">${cat}</div><div class="cat-count">${prods.length} actifs</div></div>
+    </div>`;
+    const grid=document.createElement('div');grid.className='product-grid';
+    const isEco=cat==='Economat';
+    prods.forEach(art=>{
+      const card=document.createElement('div');card.className='product-card';card.id='card_'+art.code;
+      card.innerHTML=`
+        <div class="product-top">
+          <div><div class="product-name">${art.nom}</div><div class="product-code">${art.code}</div></div>
+          <div class="product-meta">
+            ${art.conso>0?`<div class="product-conso">${art.conso}/1k</div>`:''}
+            ${art.prix>0?`<div class="product-prix">${art.prix.toFixed(2)}€</div>`:''}
+          </div>
+        </div>
+        <div class="product-inputs">
+          <div class="input-group"><div class="input-sublabel">📦 Stock (ctn)</div>
+            <input type="number" class="inv-input" id="inv_${art.code}" min="0" step="1" placeholder="0" oninput="onStockChange('${art.code}',this.value)">
+          </div>
+          <div class="input-group"><div class="input-sublabel">🚚 Transit (ctn)</div>
+            <input type="number" class="inv-input tri" id="tr_${art.code}" min="0" step="1" placeholder="0" oninput="onTransitChange('${art.code}',this.value)">
+          </div>
+          ${isEco
+            ?`<div class="input-group"><div class="input-sublabel">✅ À cmd</div>
+               <input type="number" class="inv-input" id="sug_${art.code}" min="0" step="1" placeholder="0"
+               oninput="manualQte['${art.code}']=parseInt(this.value)||0;updateCommandeCount();"
+               style="border-color:rgba(255,102,0,.3);color:var(--bk-orange);"></div>`
+            :`<div class="input-group"><div class="input-sublabel">⚡ SUG</div>
+               <div class="sug-pill na" id="sug_${art.code}">—</div></div>`
+          }
+          <div class="input-group"><div class="input-sublabel">PCB</div>
+            <div style="font-family:'JetBrains Mono';font-size:10px;color:var(--muted);padding:5px 2px;text-align:center;">${art.pcb>0?art.pcb+' u.':'—'}</div>
+          </div>
+        </div>`;
+      grid.appendChild(card);
+    });
+    section.appendChild(grid);content.appendChild(section);
+  });
+  updateProgress();
+}
+function onStockChange(code,val){inventory[code]=parseFloat(val)||0;refreshCard(code);updateProgress();updateCommandeCount();}
+function onTransitChange(code,val){transit[code]=parseFloat(val)||0;refreshCard(code);updateCommandeCount();}
+function refreshCard(code){
+  const art=catalogue.find(a=>a.code===code);if(!art||art.cat==='Economat')return;
+  const card=document.getElementById('card_'+code);if(!card)return;
+  const s=inventory[code]||0,tr=transit[code]||0;
+  card.classList.toggle('acard',s>0||tr>0);
+  const el=document.getElementById('sug_'+code);
+  if(el){renderSUG(el,art);card.classList.toggle('okcard',(calcSUGNette(art)||0)<=0);}
+}
+function updateProgress(){
+  const acts=activeArticles();
+  const done=acts.filter(a=>(inventory[a.code]||0)>0||(transit[a.code]||0)>0).length;
+  const pct=acts.length>0?Math.round((done/acts.length)*100):0;
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('invCount').textContent=done;
+}
+function updateCommandeCount(){
+  let n=0;activeArticles().forEach(art=>{
+    const q=art.cat==='Economat'?(manualQte[art.code]||0):(calcSUGNetteCartons(art)||0);if(q>0)n++;
+  });
+  document.getElementById('cmdCount').textContent=n;
+}
+function resetInventaire(){
+  if(!confirm('Remettre tout à zéro ?'))return;
+  inventory={};transit={};manualQte={};
+  document.querySelectorAll('.inv-input').forEach(el=>el.value='');
+  document.querySelectorAll('.product-card').forEach(c=>c.classList.remove('acard','okcard'));
+  document.querySelectorAll('.sug-pill').forEach(el=>{el.textContent='—';el.className='sug-pill na';});
+  updateProgress();updateCommandeCount();toast('Inventaire remis à zéro');
+}
+
+// ── COMMANDE ─────────────────────────────────────────────
+function buildCommande(filterCat){
+  const content=document.getElementById('commandeContent');
+  const rows=[];let transitCount=0;
+  CATS.forEach(cat=>{
+    const prods=activeArticles().filter(art=>{
+      if(filterCat&&filterCat!=='Tout'&&art.cat!==filterCat)return false;
+      const q=art.cat==='Economat'?(manualQte[art.code]||0):(calcSUGNetteCartons(art)||0);return q>0;
+    });
+    if(prods.length>0){
+      rows.push({type:'cat',cat});
+      prods.forEach(art=>{
+        const netteUnites=art.cat==='Economat'?(manualQte[art.code]||0):(calcSUGNette(art)||0);
+        const nette=art.cat==='Economat'?netteUnites:uniteToCarton(netteUnites,art.pcb);
+        const brute=calcSUGBrute(art);const tr=transit[art.code]||0;
+        const bruteCartons=brute?uniteToCarton(brute,art.pcb):null;
+        if(tr>0)transitCount++;
+        rows.push({type:'prod',art,nette,brute:bruteCartons,tr:transitEnCartons(art.code,art.pcb),stock:stockEnCartons(art.code,art.pcb)});
+      });
+    }
+  });
+  if(!rows.length){
+    content.innerHTML=`<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">Aucun article à commander</div><p style="margin-top:.4rem;">Renseignez le CA et l'inventaire.</p></div>`;
+    document.getElementById('comparatifSection').style.display='none';return;
+  }
+  let html=`<div class="commande-table"><div class="cmd-head"><span>CODE</span><span>LIBELLÉ + PCB</span><span>STOCK</span><span>TRANSIT</span><span>SUG BRUTE</span><span>SUG NETTE</span><span>CAT.</span></div>`;
+  rows.forEach(r=>{
+    if(r.type==='cat')html+=`<div class="cat-sep">${CAT_ICONS[r.cat]} ${r.cat}</div>`;
+    else{
+      html+=`<div class="cmd-row">
+        <div style="font-family:'JetBrains Mono';font-size:9px;color:var(--muted)">${r.art.code}</div>
+        <div style="font-size:11px">${r.art.nom}<span style="font-size:9px;color:var(--muted);margin-left:4px;">PCB ${r.art.pcb}</span></div>
+        <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--muted)">${r.stock} ctn</div>
+        <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--blue)">${r.tr>0?r.tr+' ctn':'—'}</div>
+        <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--muted)">${r.brute!==null?r.brute+' ctn':'—'}</div>
+        <div style="font-family:'JetBrains Mono';font-size:13px;font-weight:700;color:var(--bk-orange)">${r.nette} ctn</div>
+        <div style="font-size:10px;color:${CAT_COLORS[r.art.cat]}">${r.art.cat}</div>
+      </div>`;
+    }
+  });
+  html+='</div>';content.innerHTML=html;
+  const all=activeArticles().filter(a=>{const q=a.cat==='Economat'?(manualQte[a.code]||0):(calcSUGNette(a)||0);return q>0;});
+  document.getElementById('statArticles').textContent=all.length;
+  document.getElementById('statCA').textContent=caTotal>0?fmt(caTotal)+'€':'—';
+  document.getElementById('statDelai').textContent=getDelai()+'j';
+  document.getElementById('statCoeff').textContent='x'+parseFloat(document.getElementById('paramCoeff').value).toFixed(2);
+  document.getElementById('statTransit').textContent=transitCount;
+  buildComparatif();
+}
+function buildComparatif(){
+  const sec=document.getElementById('comparatifSection');
+  const rowsEl=document.getElementById('comparatifRows');
+  const items=activeArticles().filter(a=>a.cat!=='Economat'&&(transit[a.code]||0)>0&&calcSUGBrute(a)!==null);
+  if(!items.length){sec.style.display='none';return;}
+  sec.style.display='block';
+  rowsEl.innerHTML=items.map(art=>{
+    const bruteU=calcSUGBrute(art)||0;
+    const netteU=Math.max(0,calcSUGNette(art)||0);
+    const bruteCtn=uniteToCarton(bruteU,art.pcb);
+    const netteCtn=uniteToCarton(netteU,art.pcb);
+    const stockCtn=stockEnCartons(art.code,art.pcb);
+    const trCtn=transitEnCartons(art.code,art.pcb);
+    const gain=bruteCtn-netteCtn;
+    return `<div class="comp-row">
+      <div style="font-family:'JetBrains Mono';font-size:9px;color:var(--muted)">${art.code}</div>
+      <div style="font-size:11px">${art.nom}</div>
+      <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--muted)">${stockCtn} ctn</div>
+      <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--blue)">${trCtn} ctn</div>
+      <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--muted)">${bruteCtn} ctn</div>
+      <div style="font-family:'JetBrains Mono';font-size:13px;font-weight:700;color:var(--bk-orange)">${netteCtn} ctn</div>
+      <div style="font-family:'JetBrains Mono';font-size:12px;color:var(--green);font-weight:700">${gain>0?'−'+gain+' ctn':'—'}</div>
+    </div>`;
+  }).join('');
+}
+function buildFilterRow(active){
+  const row=document.getElementById('filterRow');
+  row.innerHTML=['Tout',...CATS].map(c=>
+    `<button class="filter-btn ${c===(active||'Tout')?'active':''}" onclick="buildCommande('${c}');buildFilterRow('${c}')">${c==='Tout'?'🔍 Tout':CAT_ICONS[c]+' '+c}</button>`
+  ).join('');
+}
+function clearCommande(){if(!confirm('Réinitialiser ?'))return;resetInventaire();buildCommande();buildFilterRow();}
+
+// ── GESTION ──────────────────────────────────────────────
+function renderGestion(){
+  const search=document.getElementById('searchBox').value.toLowerCase();
+  const content=document.getElementById('gestionContent');
+  const filtered=catalogue.filter(a=>{
+    if(gestionCatFilter!=='Tout'&&a.cat!==gestionCatFilter)return false;
+    if(search&&!a.code.toLowerCase().includes(search)&&!a.nom.toLowerCase().includes(search))return false;
+    return true;
+  });
+  if(!filtered.length){content.innerHTML=`<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">Aucun article</div></div>`;return;}
+  let html=`<div class="catalog-table"><div class="ctbl-head"><span>CODE</span><span>LIBELLÉ</span><span>CAT.</span><span>PCB</span><span>PRIX €</span><span>CONSO/1000</span><span>ACTIF</span></div>`;
+  filtered.forEach(art=>{
+    html+=`<div class="ctbl-row ${art.actif?'':'dim'}">
+      <div style="font-family:'JetBrains Mono';font-size:9px;color:var(--muted)">${art.code}${art.custom?'<span style="color:var(--purple);margin-left:3px;font-size:8px;">★</span>':''}</div>
+      <div style="font-size:11px;font-weight:500">${art.nom}</div>
+      <div style="font-size:10px;color:${CAT_COLORS[art.cat]}">${CAT_ICONS[art.cat]} ${art.cat}</div>
+      <div style="font-family:'JetBrains Mono';font-size:10px;color:var(--muted)">${art.pcb}</div>
+      <div style="font-family:'JetBrains Mono';font-size:10px;color:var(--yellow)">${art.prix>0?art.prix.toFixed(2):'—'}</div>
+      <div><input type="number" class="conso-sm" value="${art.conso}" step="0.01" min="0" placeholder="0" onchange="updateConso('${art.code}',this.value)"></div>
+      <div style="display:flex;flex-direction:column;gap:3px;">
+        <div class="toggle-wrap">
+          <div class="toggle ${art.actif?'on':''}" onclick="toggleArticle('${art.code}')"></div>
+          <span style="font-size:9px;color:var(--muted)">${art.actif?'Oui':'Non'}</span>
+        </div>
+        ${art.custom?`<button onclick="deleteArticle('${art.code}')" style="background:none;border:none;color:var(--bk-red);cursor:pointer;font-size:11px;padding:0;">🗑</button>`:''}
+      </div>
+    </div>`;
+  });
+  html+='</div>';content.innerHTML=html;
+}
+function buildCfRow(){
+  const row=document.getElementById('cfRow');
+  row.innerHTML=['Tout',...CATS].map(c=>
+    `<button class="cf-btn ${c===gestionCatFilter?'active':''}" onclick="gestionCatFilter='${c}';buildCfRow();renderGestion()">${c==='Tout'?'Toutes':CAT_ICONS[c]+' '+c}</button>`
+  ).join('');
+}
+function toggleArticle(code){const art=catalogue.find(a=>a.code===code);if(!art)return;art.actif=!art.actif;saveCatalogue();renderGestion();buildInventaire();updateCommandeCount();toast(art.actif?'Activé':'Désactivé');}
+function updateConso(code,val){const art=catalogue.find(a=>a.code===code);if(!art)return;art.conso=parseFloat(val)||0;saveCatalogue();updateAll();toast('CONSO mise à jour');}
+function enableAll(){catalogue.forEach(a=>a.actif=true);saveCatalogue();renderGestion();buildInventaire();updateCommandeCount();toast('Tous activés');}
+function disableAll(){catalogue.forEach(a=>a.actif=false);saveCatalogue();renderGestion();buildInventaire();updateCommandeCount();toast('Tous désactivés');}
+function deleteArticle(code){if(!confirm('Supprimer ?'))return;catalogue=catalogue.filter(a=>a.code!==code);saveCatalogue();renderGestion();buildInventaire();updateCommandeCount();toast('Supprimé');}
+
+// ── MODAL ────────────────────────────────────────────────
+function openModal(){document.getElementById('modalOverlay').classList.add('open');}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open');}
+function addArticle(){
+  const code=document.getElementById('mCode').value.trim(),nom=document.getElementById('mNom').value.trim();
+  const pcb=parseFloat(document.getElementById('mPcb').value)||0,conso=parseFloat(document.getElementById('mConso').value)||0;
+  const prix=parseFloat(document.getElementById('mPrix').value)||0,cat=document.getElementById('mCat').value;
+  if(!code||!nom){toast('Code et libellé requis');return;}
+  if(catalogue.find(a=>a.code===code)){toast('Code déjà existant');return;}
+  catalogue.push({code,nom,pcb,conso,prix,cat,actif:true,custom:true});
+  saveCatalogue();renderGestion();buildInventaire();updateCommandeCount();closeModal();
+  ['mCode','mNom','mPcb','mConso','mPrix'].forEach(id=>document.getElementById(id).value='');
+  toast('Article ajouté : '+nom);
+}
+
+// ── EXPORT ───────────────────────────────────────────────
+function getCommandeData(){
+  return activeArticles().map(art=>{
+    const q=art.cat==='Economat'?(manualQte[art.code]||0):(calcSUGNette(art)||0);
+    const netteU=calcSUGNette(art)||0;
+    const cartons=art.cat==='Economat'?q:uniteToCarton(netteU,art.pcb);
+    return{...art,
+      stock:stockEnCartons(art.code,art.pcb),
+      tr:transitEnCartons(art.code,art.pcb),
+      brute:calcSUGBrute(art)?uniteToCarton(calcSUGBrute(art),art.pcb):0,
+      sug:cartons, sugUnites:Math.ceil(netteU)};
+  }).filter(a=>a.sug>0);
+}
+function exportCSV(){
+  const data=getCommandeData();if(!data.length){toast('Aucun article');return;}
+  const date=document.getElementById('paramDate').value||new Date().toISOString().split('T')[0];
+  let csv='Code;Libellé;Catégorie;PCB;Stock (ctn);Transit (ctn);SUG Brute (ctn);SUG Nette (ctn);CONSO/1000;Prix\n';
+  data.forEach(a=>{csv+=`${a.code};"${a.nom}";${a.cat};${a.pcb};${a.stock};${a.tr};${a.brute};${a.sug};${a.conso};${a.prix}\n`;});
+  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`Commande_BK_${date}.csv`;a.click();
+  URL.revokeObjectURL(url);toast('CSV exporté ✓');
+}
+function exportCopier(){
+  const data=getCommandeData();if(!data.length){toast('Aucun article');return;}
+  const date=document.getElementById('paramDate').value||'—';
+  let txt=`COMMANDE BK BARACHOIS — K1444\nDate : ${date} | Couverture : ${getDelai()} jours | CA : ${fmt(caTotal)} €\n${'─'.repeat(70)}\n`;
+  let cat='';
+  data.forEach(a=>{if(a.cat!==cat){txt+=`\n${a.cat.toUpperCase()}\n`;cat=a.cat;}
+    txt+=`${a.code.padEnd(12)} ${a.nom.padEnd(32)} Stock:${String(a.stock).padStart(3)} ctn  Transit:${String(a.tr).padStart(3)} ctn  → ${a.sug} ctn (PCB ${a.pcb})\n`;
+  });
+  navigator.clipboard.writeText(txt).then(()=>toast('Copié ✓'));
+}
+
+// ── TABS ─────────────────────────────────────────────────
+function showPanel(name){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  const idx=['params','previsionnel','inventaire','commande','gestion'].indexOf(name);
+  document.querySelectorAll('.tab')[idx]?.classList.add('active');
+  if(name==='commande'){buildCommande();buildFilterRow();}
+  if(name==='inventaire')buildInventaire();
+  if(name==='gestion'){buildCfRow();renderGestion();}
+  if(name==='previsionnel')buildCalendar();
+}
+function setCoeff(val,btn){
+  document.getElementById('paramCoeff').value=val.toFixed(2);
+  document.querySelectorAll('.coeff-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');updateAll();
+}
+function toast(msg){
+  const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ── INIT ─────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded',()=>{
+  initCatalogue();loadPrev();
+  const today=new Date().toISOString().split('T')[0];
+  document.getElementById('paramDate').value=today;
+  onDateChange();
+  buildInventaire();
+  setCAMode('simple');
+  currentMonth=new Date();currentMonth.setDate(1);
+});
+</script>
+</body>
+</html>
